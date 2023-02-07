@@ -43,10 +43,11 @@ loader.load(
 
 //Bringing in some lighting
 const pointLight = new THREE.PointLight(0xffffff);
-pointLight.position.set(5,5,5);
+pointLight.position.set(20,30,0);
 const ambientLight = new THREE.AmbientLight(0xffffff);
 
-scene.add(pointLight, ambientLight);
+scene.add(ambientLight);
+scene.add(pointLight);
 
 //#endregion
 
