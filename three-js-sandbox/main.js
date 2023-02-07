@@ -1,6 +1,9 @@
+//#region Imports
 import './style.css'
 import * as THREE from 'three';
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls';
+import {STLLoader} from 'three/examples/jsm/loaders/STLLoader';
+//#endregion
 
 //#region  Scene and Object Setup
 //Basic scene setup
@@ -18,12 +21,25 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 camera.position.setZ(30);
 
-//Instantiating our torus
-const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
-const material = new THREE.MeshStandardMaterial({color: 0xFF6347});
-const torus = new THREE.Mesh(geometry, material);
+//Instantiating our dragon (STL)
+const geometry = new THREE.BufferGeometry(10, 3, 16, 100);
+const material = new THREE.MeshStandardMaterial({color: 0x666666});
 
-scene.add(torus);
+const loader = new STLLoader()
+loader.load(
+    './stl_example/example.stl',
+    function (geometry) {
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.rotation.set(3*Math.PI/2,0,Math.PI/2)
+        scene.add(mesh)
+    },
+    (xhr) => {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+    },
+    (error) => {
+        console.log(error)
+    }
+)
 
 //Bringing in some lighting
 const pointLight = new THREE.PointLight(0xffffff);
@@ -34,6 +50,8 @@ scene.add(pointLight, ambientLight);
 
 //#endregion
 
+//#region  Contols and effects
+
 //Helpers to see grid
 const lightHelper = new THREE.PointLightHelper(pointLight);
 const gridHelper = new THREE.GridHelper(200, 50);
@@ -41,6 +59,7 @@ scene.add(lightHelper, gridHelper);
 
 //Adding controls
 const controls = new OrbitControls(camera, renderer.domElement);
+controls.enableDamping = true;
 
 //Adding stars
 function addStar(){
@@ -55,14 +74,12 @@ function addStar(){
 
 Array(200).fill().forEach(addStar);
 
+//#endregion
+
 //#region  Animation Loop
 
 function animate(){
   requestAnimationFrame(animate); //Calling loop
-
-  torus.rotation.x += 0.01;
-  torus.rotation.y += 0.005;
-  torus.rotation.z += 0.01;
 
   controls.update(); //Updating user input each frame
 
