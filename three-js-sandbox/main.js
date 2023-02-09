@@ -19,11 +19,13 @@ const renderer = new THREE.WebGL1Renderer({
 });
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
-camera.position.setZ(30);
+camera.position.set(30, 30, 30);
 
 //Instantiating our dragon (STL)
-const geometry = new THREE.BufferGeometry(10, 3, 16, 100);
 const material = new THREE.MeshStandardMaterial({color: 0x666666});
+// const material = new THREE.MeshBasicMaterial({
+//   map: loader.load('./stl_example/Dragon_ground_color.jpg'),
+// });
 
 const loader = new STLLoader()
 loader.load(
@@ -48,7 +50,6 @@ const ambientLight = new THREE.AmbientLight(0xffffff);
 
 scene.add(ambientLight);
 scene.add(pointLight);
-
 //#endregion
 
 //#region  Contols and effects
